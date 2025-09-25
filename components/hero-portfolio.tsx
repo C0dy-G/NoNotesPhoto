@@ -1,0 +1,224 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+/* Swiss-inspired color palette with accent #c0362d, soft white #F8F8F8, soft black #1A1A1A */
+:root {
+  --background: #f8f8f8;
+  --foreground: #1a1a1a;
+  --card: #f8f8f8;
+  --card-foreground: #1a1a1a;
+  --popover: #f8f8f8;
+  --popover-foreground: #1a1a1a;
+  --primary: #c0362d;
+  --primary-foreground: #f8f8f8;
+  --secondary: #f8f8f8;
+  --secondary-foreground: #1a1a1a;
+  --muted: #f8f8f8;
+  --muted-foreground: #666666;
+  --accent: #c0362d;
+  --accent-foreground: #f8f8f8;
+  --destructive: #c0362d;
+  --destructive-foreground: #f8f8f8;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #c0362d;
+  --radius: 0rem;
+  --sidebar: #f8f8f8;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #c0362d;
+  --sidebar-primary-foreground: #f8f8f8;
+  --sidebar-accent: #f8f8f8;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #c0362d;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f8f8f8;
+  --card: #1a1a1a;
+  --card-foreground: #f8f8f8;
+  --popover: #1a1a1a;
+  --popover-foreground: #f8f8f8;
+  --primary: #c0362d;
+  --primary-foreground: #f8f8f8;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #f8f8f8;
+  --muted: #2a2a2a;
+  --muted-foreground: #999999;
+  --accent: #c0362d;
+  --accent-foreground: #f8f8f8;
+  --destructive: #c0362d;
+  --destructive-foreground: #f8f8f8;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #c0362d;
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #f8f8f8;
+  --sidebar-primary: #c0362d;
+  --sidebar-primary-foreground: #f8f8f8;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #f8f8f8;
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: #c0362d;
+}
+
+@theme inline {
+  --font-big-shoulders: var(--font-big-shoulders);
+  --font-work-sans: var(--font-work-sans);
+  --font-sans: var(--font-work-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-light;
+    /* Prevent body scroll when hero takes full height */
+    overflow-x: hidden;
+  }
+
+  /* 🔥 CRITICAL: Portfolio column independent scrolling */
+  .portfolio-column {
+    /* Should work without !important now that we removed conflicting Tailwind classes */
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    
+    /* Ensure scrolling works independently */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+    
+    /* Smooth scrolling behavior */
+    scroll-behavior: smooth;
+    
+    /* Create isolated stacking context */
+    z-index: 1;
+  }
+  
+  /* Subtle scrollbar on hover for desktop */
+  .portfolio-column:hover {
+    scrollbar-color: rgba(26, 26, 26, 0.15) transparent;
+  }
+  
+  /* Custom webkit scrollbar styling */
+  .portfolio-column::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .portfolio-column::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .portfolio-column::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .portfolio-column:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(26, 26, 26, 0.15);
+  }
+  
+  /* Dark mode scrollbar */
+  .dark .portfolio-column:hover {
+    scrollbar-color: rgba(248, 248, 248, 0.15) transparent;
+  }
+  
+  .dark .portfolio-column:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(248, 248, 248, 0.15);
+  }
+
+  /* Global smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Typography classes for Swiss design */
+  .font-display {
+    font-family: var(--font-big-shoulders);
+  }
+  
+  .font-body {
+    font-family: var(--font-work-sans);
+  }
+  
+  /* Optional: Add scroll snap for smoother experience */
+  .portfolio-column {
+    scroll-snap-type: y proximity;
+  }
+  
+  .portfolio-column > div > div {
+    scroll-snap-align: start;
+  }
+  
+  /* 🔥 PERFORMANCE: Hardware acceleration for smooth scrolling */
+  .portfolio-column {
+    transform: translateZ(0);
+    will-change: scroll-position;
+    /* Add momentum scrolling for mobile */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent text selection on portfolio images during scroll */
+  .portfolio-column img {
+    user-select: none;
+    -webkit-user-drag: none;
+    /* Prevent layout shift during image load */
+    backface-visibility: hidden;
+  }
+  
+  /* Optional: Add subtle scroll indicators */
+  .portfolio-column::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, transparent, rgba(26, 26, 26, 0.1));
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .portfolio-column:hover::after {
+    opacity: 1;
+  }
+}

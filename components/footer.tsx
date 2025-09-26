@@ -5,8 +5,8 @@ export default function Footer() {
     <footer className="bg-foreground text-background py-12 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-          {/* Logo */}
-          <div className="font-display text-xl font-bold">NO NOTES PHOTO</div>
+          {/* Logo № */}
+          <div className="font-display text-xl font-bold">NO NOTES PHOTOGRAPHY</div>
 
           {/* Social Icons Placeholders */}
           <div className="flex space-x-6">

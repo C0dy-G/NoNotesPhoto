@@ -29,7 +29,7 @@ export default function AboutSection() {
           {/* Hero Image */}
           <div className="relative">
             <Image
-              src="/placeholder.svg?height=600&width=500"
+              src="/professional-real-estate-photographer-cody.webp"
               alt="Photographer at work"
               width={500}
               height={600}

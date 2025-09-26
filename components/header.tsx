@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"   // ✅ import Link
 
-export default function Header() {
+export default function Header() {  
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const scrollToSection = (sectionId: string) => {
@@ -18,8 +20,20 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="font-display text-xl font-bold text-foreground">NO NOTES PHOTO</div>
+
+          {/* Logo with Swiss minimalist styling */}
+          <Link href="/" aria-label="Go to homepage">   {/* ✅ wrap logo */}
+            <Image
+              src="/no-notes-photography-logo-black.svg"
+              alt="NO NOTES PHOTO LOGO"
+              width={180}
+              height={32}
+              className="h-8 w-auto brightness-0 dark:brightness-100 dark:invert transition-colors duration-300"
+              priority
+            />
+          </Link>
+          {/* Text Logo
+          <div className="font-display text-xl font-bold text-foreground">№ NOTES PHOTO</div> */}
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

@@ -1,224 +1,174 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@custom-variant dark (&:is(.dark *));
+"use client"
+import { useEffect, useRef, useState, useCallback } from "react"
+import Image from "next/image"
+import React from "react"
 
-/* Swiss-inspired color palette with accent #c0362d, soft white #F8F8F8, soft black #1A1A1A */
-:root {
-  --background: #f8f8f8;
-  --foreground: #1a1a1a;
-  --card: #f8f8f8;
-  --card-foreground: #1a1a1a;
-  --popover: #f8f8f8;
-  --popover-foreground: #1a1a1a;
-  --primary: #c0362d;
-  --primary-foreground: #f8f8f8;
-  --secondary: #f8f8f8;
-  --secondary-foreground: #1a1a1a;
-  --muted: #f8f8f8;
-  --muted-foreground: #666666;
-  --accent: #c0362d;
-  --accent-foreground: #f8f8f8;
-  --destructive: #c0362d;
-  --destructive-foreground: #f8f8f8;
-  --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: #c0362d;
-  --radius: 0rem;
-  --sidebar: #f8f8f8;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #c0362d;
-  --sidebar-primary-foreground: #f8f8f8;
-  --sidebar-accent: #f8f8f8;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #c0362d;
+const portfolioImages = {
+  architecture: [
+    "/peoples-oc-9792-edit.webp",
+    "/blum-storefront-5545.webp",
+    "/glass-office-building-facade.jpg",
+  ],
+  commercial: [
+    "/blum-retail-5775.webp",
+    "/blueprints-5298.webp", 
+    "/corporate-office-space.jpg",
+  ],
+  industrial: [
+    "/electrical-5372.webp",
+    "/kremlin-industrial-5357.webp",
+    "/industrial-landscape.jpg",
+  ],
 }
 
-.dark {
-  --background: #1a1a1a;
-  --foreground: #f8f8f8;
-  --card: #1a1a1a;
-  --card-foreground: #f8f8f8;
-  --popover: #1a1a1a;
-  --popover-foreground: #f8f8f8;
-  --primary: #c0362d;
-  --primary-foreground: #f8f8f8;
-  --secondary: #2a2a2a;
-  --secondary-foreground: #f8f8f8;
-  --muted: #2a2a2a;
-  --muted-foreground: #999999;
-  --accent: #c0362d;
-  --accent-foreground: #f8f8f8;
-  --destructive: #c0362d;
-  --destructive-foreground: #f8f8f8;
-  --border: #2a2a2a;
-  --input: #2a2a2a;
-  --ring: #c0362d;
-  --sidebar: #1a1a1a;
-  --sidebar-foreground: #f8f8f8;
-  --sidebar-primary: #c0362d;
-  --sidebar-primary-foreground: #f8f8f8;
-  --sidebar-accent: #2a2a2a;
-  --sidebar-accent-foreground: #f8f8f8;
-  --sidebar-border: #2a2a2a;
-  --sidebar-ring: #c0362d;
-}
+export default function HeroPortfolio() {
+  const architectureRef = useRef<HTMLDivElement>(null)
+  const commercialRef = useRef<HTMLDivElement>(null)
+  const industrialRef = useRef<HTMLDivElement>(null)
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
 
-@theme inline {
-  --font-big-shoulders: var(--font-big-shoulders);
-  --font-work-sans: var(--font-work-sans);
-  --font-sans: var(--font-work-sans);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
+  // Throttle mouse move for better performance
+  const throttledMouseMove = useCallback((e: MouseEvent) => {
+    setCursorPosition({ x: e.clientX, y: e.clientY })
+  }, [])
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  
-  body {
-    @apply bg-background text-foreground font-light;
-    /* Prevent body scroll when hero takes full height */
-    overflow-x: hidden;
-  }
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout
+    const handleMouseMove = (e: MouseEvent) => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => throttledMouseMove(e), 16) // ~60fps
+    }
 
-  /* 🔥 CRITICAL: Portfolio column independent scrolling */
-  .portfolio-column {
-    /* Should work without !important now that we removed conflicting Tailwind classes */
-    height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    position: relative;
+    document.addEventListener("mousemove", handleMouseMove)
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove)
+      clearTimeout(timeoutId)
+    }
+  }, [throttledMouseMove])
+
+  const getCursorIcon = useCallback(() => {
+    // Safety check for SSR
+    if (typeof window === 'undefined') return 'default'
     
-    /* Ensure scrolling works independently */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-    
-    /* Smooth scrolling behavior */
-    scroll-behavior: smooth;
-    
-    /* Create isolated stacking context */
-    z-index: 1;
-  }
-  
-  /* Subtle scrollbar on hover for desktop */
-  .portfolio-column:hover {
-    scrollbar-color: rgba(26, 26, 26, 0.15) transparent;
-  }
-  
-  /* Custom webkit scrollbar styling */
-  .portfolio-column::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .portfolio-column::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .portfolio-column::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .portfolio-column:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(26, 26, 26, 0.15);
-  }
-  
-  /* Dark mode scrollbar */
-  .dark .portfolio-column:hover {
-    scrollbar-color: rgba(248, 248, 248, 0.15) transparent;
-  }
-  
-  .dark .portfolio-column:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(248, 248, 248, 0.15);
-  }
+    const viewportHeight = window.innerHeight
+    const isTopHalf = cursorPosition.y < viewportHeight * 0.45
+    if (isTopHalf) {
+      return 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3IDE0TDEyIDlMNyAxNCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K"), auto'
+    } else {
+      return 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgMTBMMTIgMTVMMTcgMTAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+"), auto'
+    }
+  }, [cursorPosition.y])
 
-  /* Global smooth scroll */
-  html {
-    scroll-behavior: smooth;
-  }
+  return (
+    <section 
+      id="portfolio" 
+      className="relative h-screen overflow-hidden"
+    >
+      {/* Desktop: Three columns with fixed height */}
+      <div className="hidden lg:grid lg:grid-cols-3 h-full">
+        <PortfolioColumn
+          ref={architectureRef}
+          title="Architecture"
+          images={portfolioImages.architecture}
+          cursorIcon={getCursorIcon()}
+        />
+        <PortfolioColumn
+          ref={commercialRef}
+          title="Commercial"
+          images={portfolioImages.commercial}
+          cursorIcon={getCursorIcon()}
+        />
+        <PortfolioColumn
+          ref={industrialRef}
+          title="Industrial"
+          images={portfolioImages.industrial}
+          cursorIcon={getCursorIcon()}
+        />
+      </div>
 
-  /* Typography classes for Swiss design */
-  .font-display {
-    font-family: var(--font-big-shoulders);
-  }
-  
-  .font-body {
-    font-family: var(--font-work-sans);
-  }
-  
-  /* Optional: Add scroll snap for smoother experience */
-  .portfolio-column {
-    scroll-snap-type: y proximity;
-  }
-  
-  .portfolio-column > div > div {
-    scroll-snap-align: start;
-  }
-  
-  /* 🔥 PERFORMANCE: Hardware acceleration for smooth scrolling */
-  .portfolio-column {
-    transform: translateZ(0);
-    will-change: scroll-position;
-    /* Add momentum scrolling for mobile */
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* Prevent text selection on portfolio images during scroll */
-  .portfolio-column img {
-    user-select: none;
-    -webkit-user-drag: none;
-    /* Prevent layout shift during image load */
-    backface-visibility: hidden;
-  }
-  
-  /* Optional: Add subtle scroll indicators */
-  .portfolio-column::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 2px;
-    height: 20px;
-    background: linear-gradient(to bottom, transparent, rgba(26, 26, 26, 0.1));
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .portfolio-column:hover::after {
-    opacity: 1;
-  }
+      {/* Tablet: Two columns + one full width */}
+      <div className="hidden md:block lg:hidden h-full">
+        <div className="grid grid-cols-2 h-1/2">
+          <PortfolioColumn
+            title="Architecture"
+            images={portfolioImages.architecture}
+            cursorIcon={getCursorIcon()}
+          />
+          <PortfolioColumn
+            title="Commercial"
+            images={portfolioImages.commercial}
+            cursorIcon={getCursorIcon()}
+          />
+        </div>
+        <div className="h-1/2">
+          <PortfolioColumn
+            title="Industrial"
+            images={portfolioImages.industrial}
+            cursorIcon={getCursorIcon()}
+          />
+        </div>
+      </div>
+
+      {/* Mobile: Stacked scrollable columns */}
+      <div className="md:hidden h-full overflow-y-auto">
+        <div className="space-y-8 px-4 py-4">
+          <PortfolioColumn title="Architecture" images={portfolioImages.architecture} mobile />
+          <PortfolioColumn title="Commercial" images={portfolioImages.commercial} mobile />
+          <PortfolioColumn title="Industrial" images={portfolioImages.industrial} mobile />
+        </div>
+      </div>
+    </section>
+  )
 }
+
+interface PortfolioColumnProps {
+  title: string
+  images: string[]
+  mobile?: boolean
+  cursorIcon?: string
+}
+
+const PortfolioColumn = React.forwardRef<HTMLDivElement, PortfolioColumnProps>(
+  ({ title, images, mobile = false, cursorIcon }, ref) => {
+    return (
+      <div className={`relative ${mobile ? "h-96" : ""} group overflow-hidden`}>
+        {/* Column Title */}
+        <div className="absolute top-4 left-4 z-20 bg-background/95 backdrop-blur-sm px-3 py-1.5 border border-border/20 shadow-sm">
+          <h3 className="font-display text-xs font-bold text-foreground tracking-wider">
+            {title.toUpperCase()}
+          </h3>
+        </div>
+
+        {/* Scrollable Image Container - REMOVED h-full class that was conflicting */}
+        <div
+          ref={ref}
+          className="portfolio-column overflow-y-scroll overflow-x-hidden"
+          style={{ cursor: mobile ? "default" : cursorIcon }}
+        >
+          <div className="space-y-0">
+            {images.map((src, index) => (
+              <div key={`${title}-${index}`} className="relative w-full group/image">
+                <Image
+                  src={src || "/placeholder.svg"}
+                  alt={`${title} photography ${index + 1}`}
+                  width={400}
+                  height={600}
+                  className="w-full h-auto object-cover transition-transform duration-500 ease-out group-hover/image:scale-[1.01]"
+                  loading={index < 2 ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  priority={index === 0}
+                />
+                {/* Subtle image overlay for interaction feedback */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/5 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
+              </div>
+            ))}
+            {/* Add some bottom spacing for the last image */}
+            <div className="h-4" />
+          </div>
+        </div>
+      </div>
+    )
+  },
+)
+
+PortfolioColumn.displayName = "PortfolioColumn"

@@ -195,13 +195,7 @@
     /* Add momentum scrolling for mobile */
     -webkit-overflow-scrolling: touch;
   }
-  /* Add this to your globals.css as emergency fix */
-.portfolio-column {
-  height: 100vh !important;
-  overflow-y: scroll !important;
-  overflow-x: hidden !important;
-  position: relative !important;
-}
+  
   /* Prevent text selection on portfolio images during scroll */
   .portfolio-column img {
     user-select: none;
